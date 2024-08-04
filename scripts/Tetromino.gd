@@ -34,13 +34,21 @@ func activate(start, piece_layer, board_layer, source_id):
 	_board_layer = board_layer
 	_source_id = source_id
 	_is_active = true
+	erase()
 	draw()
 
 func move(direction : Vector2i):
 	if check_can_move(direction):
-		var prev_position = Vector2i(_position)
+		erase()
 		_position += direction
-		draw(prev_position, _position)
+		draw()
+	elif direction == _board.DOWN: 
+		erase(_piece_layer)
+		draw(_board_layer)
+		
+func drop(direction):
+	while check_can_move(direction):
+		move(direction)
 
 func check_can_move(direction):
 	var next_pos = calc_absolute_pos(_position + direction)
@@ -52,8 +60,8 @@ func check_can_occupy(pos):
 			return false
 	return true
 	
-func calc_absolute_pos(rel_pos = _position):
-	var position = get_current_rotation()
+func calc_absolute_pos(rel_pos = _position, rotation = _curr_rotation):
+	var position = get_rotation(rotation)
 	var nextPosition = position.duplicate()
 
 	for i in range(nextPosition.size()):
@@ -61,16 +69,24 @@ func calc_absolute_pos(rel_pos = _position):
 	
 	return nextPosition
 
-func get_current_rotation() -> Array:
-	return _rotations[ _curr_rotation % _rotations.size()]
+func get_rotation(index = _curr_rotation) -> Array:
+		return _rotations[ index % _rotations.size()]
 
-func draw(from = _position, to = _position):
-	var from_abs = calc_absolute_pos(from)
-	var to_abs = calc_absolute_pos(to)
-	for cell in from_abs:
-		_board.erase_cell(_piece_layer, cell)
-	for cell in to_abs:
-		_board.set_cell(_piece_layer, cell, _source_id, _tile_coord)
+func erase(layer = _piece_layer):
+	var pos = calc_absolute_pos()
+	for cell in pos:
+		_board.erase_cell(layer, cell)
 
-func rotate():
-	pass
+func draw(layer = _piece_layer):
+	var pos = calc_absolute_pos()
+	for cell in pos:
+		_board.set_cell(layer, cell, _source_id, _tile_coord)
+
+func rotate(clockwise = true):
+	var offset = 1 if clockwise else -1
+	var next_position = calc_absolute_pos(_position, _curr_rotation + offset)
+	
+	if check_can_occupy(next_position):
+		erase()
+		_curr_rotation += offset
+		draw()

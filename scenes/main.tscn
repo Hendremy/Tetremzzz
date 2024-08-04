@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://o1ni24lljj0e"]
+[gd_scene load_steps=6 format=3 uid="uid://o1ni24lljj0e"]
 
 [ext_resource type="Texture2D" uid="uid://d256rcjvfgi4r" path="res://assets/bloc_sheet.png" id="1_r5f6k"]
 [ext_resource type="Script" path="res://scripts/TetremzzzGame.gd" id="2_dkd4q"]
+[ext_resource type="FontFile" uid="uid://lyxkbj4otydv" path="res://assets/space age.otf" id="3_owhsr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u4ak1"]
 texture = ExtResource("1_r5f6k")
@@ -68,3 +69,35 @@ script = ExtResource("2_dkd4q")
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(384, 704)
 zoom = Vector2(0.5, 0.5)
+
+[node name="MoveTimer" type="Timer" parent="."]
+wait_time = 0.075
+autostart = true
+
+[node name="FallTimer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="RestartButton" type="Button" parent="."]
+offset_left = 848.0
+offset_top = 576.0
+offset_right = 1528.0
+offset_bottom = 768.0
+theme_override_fonts/font = ExtResource("3_owhsr")
+theme_override_font_sizes/font_size = 64
+text = "Restart"
+
+[node name="PauseButton" type="Button" parent="."]
+offset_left = 848.0
+offset_top = 832.0
+offset_right = 1528.0
+offset_bottom = 1024.0
+theme_override_fonts/font = ExtResource("3_owhsr")
+theme_override_font_sizes/font_size = 64
+toggle_mode = true
+text = "Pause"
+
+[connection signal="timeout" from="MoveTimer" to="Board" method="_on_move_timer_timeout"]
+[connection signal="timeout" from="FallTimer" to="Board" method="_on_fall_timer_timeout"]
+[connection signal="pressed" from="RestartButton" to="Board" method="_on_restart_button_pressed"]
+[connection signal="toggled" from="PauseButton" to="Board" method="_on_pause_button_toggled"]
