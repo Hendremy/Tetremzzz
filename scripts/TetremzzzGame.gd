@@ -1,7 +1,13 @@
 extends TileMap
 
 @onready var main = $".."
-@onready var pause_button = $"../PauseButton"
+@onready var pause_button = %PauseButton
+@onready var hold = %Hold
+@onready var next = %Next
+
+@onready var score_value = %ScoreValue
+@onready var lines_value = %LinesValue
+@onready var level_value = %LevelValue
 
 #const TetrominoFactory = preload("res://scripts/TetrominoFactory.gd")
 const START_POS = Vector2i(5,0)
@@ -16,6 +22,8 @@ const COLS = 10
 
 var score = 0
 var line_count = 0
+var level = 1
+
 var tetromino_factory : TetrominoFactory
 var current_piece : Tetromino
 var next_pieces = []
@@ -28,17 +36,38 @@ func _ready():
 	new_game()
 	
 func new_game():
+	pause(true)
 	erase_board()
 	
 	tetromino_factory = TetrominoFactory.new(self)
 	next_pieces = tetromino_factory.create_set()
 	next_pieces_buffer = tetromino_factory.create_set()
+	
+	update_level()
+	update_score()
+	update_lines()
 
 	setup_new_piece()
+	pause(false)
+	
+func update_level(value = 1):
+	level = value
+	level_value.text = str(level)
+	
+func update_score(value = 0):
+	score = value
+	score_value.text = str(score)
+	
+func update_lines(value = 0):
+	line_count = value
+	lines_value.text = str(line_count)
+	
+func pause(yes: bool):
+	pause_button.emit_signal("toggled", yes)
 
 func erase_board():
 	for i in range(1,COLS+1):
-		for j in range(1,ROWS):
+		for j in range(0,ROWS):
 			self.erase_cell(BOARD_LAYER, Vector2i(i,j))
 			self.erase_cell(PIECE_LAYER, Vector2i(i,j))
 	
@@ -61,30 +90,46 @@ func pop_next_piece() -> Tetromino:
 func score_lines():
 	var scored_pts = 0
 	var lines = get_full_lines()
+	
 	for line in lines:
 		clear_line(line)
 		scored_pts += 100
 	
 	line_count += lines.size() 
 	score += scored_pts
-
-func clear_line(y):
-	for x in range(1, COLS + 1):
-		erase_cell(BOARD_LAYER, Vector2i(x,y))
+	
+	for line in lines:
+		shift_upper_rows(line)
+	
+func shift_upper_rows(line):
+	for row in range(line-1, 1, -1):
+		for col in range(1, COLS + 1):
+			var pos = Vector2i(col, row)
+			var cell = get_cell_atlas_coords(BOARD_LAYER, pos)
+			if cell:
+				erase_cell(BOARD_LAYER, pos)
+				set_cell(BOARD_LAYER, Vector2i(col, row + 1), SOURCE_ID, cell)
+			
+	
+func clear_line(row):
+	for col in range(1, COLS + 1):
+		erase_cell(BOARD_LAYER, Vector2i(col,row))
 
 func get_full_lines():
 	var lines = []
-	for y in range(1,ROWS):
+	for row in range(0,ROWS):
 		var line_is_full = true
-		for x in range(1,COLS + 1):
-			if get_cell_source_id(BOARD_LAYER, Vector2i(x,y)) == -1:
+		for col in range(1,COLS + 1):
+			if get_cell_source_id(BOARD_LAYER, Vector2i(col,row)) == -1:
 				line_is_full = false
 		if line_is_full:
-			lines.append(y)
+			lines.append(row)
 	return lines
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
+	if Input.is_action_just_pressed("pause"):
+		pause(!is_paused)
+	
 	if is_paused:
 		return
 	

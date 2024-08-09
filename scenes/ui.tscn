@@ -1,0 +1,129 @@
+[gd_scene load_steps=3 format=3 uid="uid://cley4v5xu0fjv"]
+
+[ext_resource type="LabelSettings" uid="uid://4who20qup4y3" path="res://assets/ui_label_settings.tres" id="1_f7st0"]
+[ext_resource type="FontFile" uid="uid://lyxkbj4otydv" path="res://assets/space age.otf" id="2_3uyuf"]
+
+[node name="UI" type="Control"]
+layout_mode = 3
+anchor_right = 1.635
+anchor_bottom = 1.347
+offset_right = 7.99976
+offset_bottom = -0.300049
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScoreBoard" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.996
+offset_right = -1312.0
+offset_bottom = -601.152
+scale = Vector2(2, 2)
+alignment = 1
+
+[node name="ScoreContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ScoreBox" type="VBoxContainer" parent="ScoreBoard/ScoreContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="ScoreBoard/ScoreContainer/ScoreBox"]
+layout_mode = 2
+text = "Score :
+"
+label_settings = ExtResource("1_f7st0")
+
+[node name="ScoreValue" type="Label" parent="ScoreBoard/ScoreContainer/ScoreBox"]
+layout_mode = 2
+text = "0
+"
+label_settings = ExtResource("1_f7st0")
+
+[node name="LinesContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="LinesBox" type="VBoxContainer" parent="ScoreBoard/LinesContainer"]
+layout_mode = 2
+
+[node name="LinesLabel" type="Label" parent="ScoreBoard/LinesContainer/LinesBox"]
+layout_mode = 2
+text = "Lines :
+"
+label_settings = ExtResource("1_f7st0")
+
+[node name="LinesValue" type="Label" parent="ScoreBoard/LinesContainer/LinesBox"]
+layout_mode = 2
+text = "0
+"
+label_settings = ExtResource("1_f7st0")
+
+[node name="LevelContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="LevelBox" type="VBoxContainer" parent="ScoreBoard/LevelContainer"]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="ScoreBoard/LevelContainer/LevelBox"]
+layout_mode = 2
+text = "Level :
+"
+label_settings = ExtResource("1_f7st0")
+
+[node name="LevelValue" type="Label" parent="ScoreBoard/LevelContainer/LevelBox"]
+layout_mode = 2
+text = "1
+"
+label_settings = ExtResource("1_f7st0")
+
+[node name="Buttons" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.829
+anchor_top = 0.007
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.7039
+offset_top = 247.516
+offset_right = -16.0
+offset_bottom = -68.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 1
+
+[node name="RestartContainer" type="MarginContainer" parent="Buttons"]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="RestartButton" type="Button" parent="Buttons/RestartContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("2_3uyuf")
+theme_override_font_sizes/font_size = 64
+text = "Restart"
+
+[node name="PauseContainer" type="MarginContainer" parent="Buttons"]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="PauseButton" type="Button" parent="Buttons/PauseContainer"]
+layout_mode = 2
+focus_mode = 0
+theme_override_fonts/font = ExtResource("2_3uyuf")
+theme_override_font_sizes/font_size = 64
+toggle_mode = true
+text = "Pause"

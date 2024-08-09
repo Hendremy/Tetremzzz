@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://4who20qup4y3"]
+
+[ext_resource type="FontFile" uid="uid://lyxkbj4otydv" path="res://assets/space age.otf" id="1_7nfg7"]
+
+[resource]
+font = ExtResource("1_7nfg7")
+font_size = 64

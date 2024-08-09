@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://o1ni24lljj0e"]
+[gd_scene load_steps=9 format=3 uid="uid://o1ni24lljj0e"]
 
 [ext_resource type="Texture2D" uid="uid://d256rcjvfgi4r" path="res://assets/bloc_sheet.png" id="1_r5f6k"]
 [ext_resource type="Script" path="res://scripts/TetremzzzGame.gd" id="2_dkd4q"]
+[ext_resource type="LabelSettings" uid="uid://4who20qup4y3" path="res://assets/ui_label_settings.tres" id="3_ogoxq"]
 [ext_resource type="FontFile" uid="uid://lyxkbj4otydv" path="res://assets/space age.otf" id="3_owhsr"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u4ak1"]
@@ -53,6 +54,24 @@ tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_u4ak1")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_v5o43"]
+texture = ExtResource("1_r5f6k")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_wgabh"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_v5o43")
+
 [node name="Main" type="Node2D"]
 
 [node name="Board" type="TileMap" parent="."]
@@ -78,28 +97,160 @@ autostart = true
 wait_time = 0.5
 autostart = true
 
-[node name="RestartButton" type="Button" parent="."]
-offset_left = 848.0
+[node name="ScoreBoard" type="VBoxContainer" parent="."]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.996
+offset_left = -576.0
 offset_top = 576.0
-offset_right = 1528.0
-offset_bottom = 768.0
+offset_right = -128.0
+offset_bottom = 1344.0
+alignment = 1
+
+[node name="ScoreContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ScoreBox" type="VBoxContainer" parent="ScoreBoard/ScoreContainer"]
+layout_mode = 2
+
+[node name="ScoreLabel" type="Label" parent="ScoreBoard/ScoreContainer/ScoreBox"]
+layout_mode = 2
+text = "Score :
+"
+label_settings = ExtResource("3_ogoxq")
+
+[node name="ScoreValue" type="Label" parent="ScoreBoard/ScoreContainer/ScoreBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0
+"
+label_settings = ExtResource("3_ogoxq")
+
+[node name="LinesContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="LinesBox" type="VBoxContainer" parent="ScoreBoard/LinesContainer"]
+layout_mode = 2
+
+[node name="LinesLabel" type="Label" parent="ScoreBoard/LinesContainer/LinesBox"]
+layout_mode = 2
+text = "Lines :
+"
+label_settings = ExtResource("3_ogoxq")
+
+[node name="LinesValue" type="Label" parent="ScoreBoard/LinesContainer/LinesBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0
+"
+label_settings = ExtResource("3_ogoxq")
+
+[node name="LevelContainer" type="MarginContainer" parent="ScoreBoard"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="LevelBox" type="VBoxContainer" parent="ScoreBoard/LevelContainer"]
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="ScoreBoard/LevelContainer/LevelBox"]
+layout_mode = 2
+text = "Level :
+"
+label_settings = ExtResource("3_ogoxq")
+
+[node name="LevelValue" type="Label" parent="ScoreBoard/LevelContainer/LevelBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1
+"
+label_settings = ExtResource("3_ogoxq")
+
+[node name="Buttons" type="VBoxContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.829
+anchor_top = 0.007
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 896.0
+offset_top = 768.0
+offset_right = 1920.0
+offset_bottom = 1352.0
+grow_horizontal = 0
+grow_vertical = 2
+alignment = 1
+
+[node name="RestartContainer" type="MarginContainer" parent="Buttons"]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="RestartButton" type="Button" parent="Buttons/RestartContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 focus_mode = 0
 theme_override_fonts/font = ExtResource("3_owhsr")
 theme_override_font_sizes/font_size = 64
 text = "Restart"
 
-[node name="PauseButton" type="Button" parent="."]
-offset_left = 848.0
-offset_top = 832.0
-offset_right = 1528.0
-offset_bottom = 1024.0
+[node name="PauseContainer" type="MarginContainer" parent="Buttons"]
+layout_mode = 2
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="PauseButton" type="Button" parent="Buttons/PauseContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 focus_mode = 0
 theme_override_fonts/font = ExtResource("3_owhsr")
 theme_override_font_sizes/font_size = 64
 toggle_mode = true
 text = "Pause"
 
+[node name="Hold" type="TileMap" parent="."]
+unique_name_in_owner = true
+position = Vector2(-448, 128)
+tile_set = SubResource("TileSet_wgabh")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65538, 0, 0, -2, 0, 0, 65534, 0, 0, 131070, 0, 0, 196606, 0, 0, 262142, 0, 0, 327678, 0, 0, -65537, 0, 0, 327679, 0, 0, -131072, 0, 0, 262144, 0, 0, -131071, 0, 0, 262145, 0, 0, -131070, 0, 0, 262146, 0, 0, -131069, 0, 0, 262147, 0, 0, -131068, 0, 0, -65532, 0, 0, 4, 0, 0, 65540, 0, 0, 131076, 0, 0, 196612, 0, 0, 262148, 0, 0)
+
+[node name="HoldLabel" type="Label" parent="Hold"]
+offset_left = -64.0
+offset_top = -192.0
+offset_right = 270.0
+offset_bottom = -130.0
+text = "HOLD"
+label_settings = ExtResource("3_ogoxq")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Next" type="TileMap" parent="."]
+unique_name_in_owner = true
+position = Vector2(1024, 128)
+tile_set = SubResource("TileSet_wgabh")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65538, 0, 0, -2, 0, 0, 65534, 0, 0, 131070, 0, 0, 196606, 0, 0, 262142, 0, 0, 327678, 0, 0, -65537, 0, 0, 327679, 0, 0, -131072, 0, 0, 262144, 0, 0, -131071, 0, 0, 262145, 0, 0, -131070, 0, 0, 262146, 0, 0, -131069, 0, 0, 262147, 0, 0, -131068, 0, 0, 262148, 0, 0, -131067, 0, 0, 262149, 0, 0, -131066, 0, 0, 262150, 0, 0, -131065, 0, 0, 262151, 0, 0, -131064, 0, 0, 262152, 0, 0, -131063, 0, 0, 262153, 0, 0, -131062, 0, 0, 262154, 0, 0, -131061, 0, 0, 262155, 0, 0, -131060, 0, 0, 262156, 0, 0, -131059, 0, 0, -65523, 0, 0, 13, 0, 0, 65549, 0, 0, 131085, 0, 0, 196621, 0, 0, 262157, 0, 0)
+
+[node name="NextLabel" type="Label" parent="Next"]
+offset_left = 184.0
+offset_top = -192.0
+offset_right = 518.0
+offset_bottom = -130.0
+text = "NEXT"
+label_settings = ExtResource("3_ogoxq")
+horizontal_alignment = 1
+
 [connection signal="timeout" from="MoveTimer" to="Board" method="_on_move_timer_timeout"]
 [connection signal="timeout" from="FallTimer" to="Board" method="_on_fall_timer_timeout"]
-[connection signal="pressed" from="RestartButton" to="Board" method="_on_restart_button_pressed"]
-[connection signal="toggled" from="PauseButton" to="Board" method="_on_pause_button_toggled"]
+[connection signal="pressed" from="Buttons/RestartContainer/RestartButton" to="Board" method="_on_restart_button_pressed"]
+[connection signal="toggled" from="Buttons/PauseContainer/PauseButton" to="Board" method="_on_pause_button_toggled"]
