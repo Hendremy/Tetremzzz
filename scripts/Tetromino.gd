@@ -1,5 +1,7 @@
 class_name Tetromino extends Node
 
+signal piece_landed
+
 var _id: int
 var _rotations : Array
 var _curr_rotation : int
@@ -42,9 +44,10 @@ func move(direction : Vector2i):
 		erase()
 		_position += direction
 		draw()
-	elif direction == _board.DOWN: 
+	elif direction == _board.DOWN:
 		erase(_piece_layer)
 		draw(_board_layer)
+		emit_signal("piece_landed")
 		
 func drop(direction):
 	while check_can_move(direction):
