@@ -2,6 +2,7 @@ extends TileMap
 
 @onready var main = $".."
 @onready var game_over = $"../GameOver"
+@onready var paused = $"../Paused"
 
 @onready var pause_button = %PauseButton
 @onready var hold = %Hold
@@ -12,9 +13,10 @@ extends TileMap
 @onready var level_value = %LevelValue
 
 #const TetrominoFactory = preload("res://scripts/TetrominoFactory.gd")
-const START_POS = Vector2i(5,0)
+const START_POS = Vector2i(4,0)
 const BOARD_LAYER = 0
 const PIECE_LAYER = 1
+const SHADOW_LAYER = 2
 const SOURCE_ID = 0
 const DOWN = Vector2i(0,+1)
 const LEFT = Vector2i(-1,0)
@@ -83,7 +85,7 @@ func pause(yes: bool):
 	pause_button.emit_signal("toggled", yes)
 
 func erase_board():
-	for i in range(1,COLS+1):
+	for i in range(0,COLS):
 		for j in range(0,ROWS):
 			self.erase_cell(BOARD_LAYER, Vector2i(i,j))
 			self.erase_cell(PIECE_LAYER, Vector2i(i,j))
@@ -96,7 +98,7 @@ func setup_new_piece():
 	current_piece = pop_next_piece()
 	current_piece.piece_landed.connect(_on_piece_landed)
 	current_piece.cannot_move.connect(_on_piece_cannot_move)
-	current_piece.activate(START_POS, PIECE_LAYER, BOARD_LAYER, SOURCE_ID)
+	current_piece.activate(START_POS, PIECE_LAYER, BOARD_LAYER, SHADOW_LAYER, SOURCE_ID)
 	
 func pop_next_piece() -> Tetromino:
 	var p = next_pieces.pop_front()
@@ -113,7 +115,7 @@ func score_lines():
 	
 	for line in lines:
 		clear_line(line)
-		scored_pts += 100
+		scored_pts += 100 * level
 	
 	update_scoreboard(score + scored_pts, line_count + lines.size())
 	
@@ -122,7 +124,7 @@ func score_lines():
 	
 func shift_upper_rows(line):
 	for row in range(line-1, 1, -1):
-		for col in range(1, COLS + 1):
+		for col in range(0, COLS):
 			var pos = Vector2i(col, row)
 			var cell = get_cell_atlas_coords(BOARD_LAYER, pos)
 			if cell:
@@ -130,14 +132,14 @@ func shift_upper_rows(line):
 				set_cell(BOARD_LAYER, Vector2i(col, row + 1), SOURCE_ID, cell)
 
 func clear_line(row):
-	for col in range(1, COLS + 1):
+	for col in range(0, COLS):
 		erase_cell(BOARD_LAYER, Vector2i(col,row))
 
 func get_full_lines():
 	var lines = []
 	for row in range(0,ROWS):
 		var line_is_full = true
-		for col in range(1,COLS + 1):
+		for col in range(0,COLS):
 			if get_cell_source_id(BOARD_LAYER, Vector2i(col,row)) == -1:
 				line_is_full = false
 		if line_is_full:
@@ -164,13 +166,11 @@ func _process(_delta):
 	#	emit_signal('hold_pressed')
 
 func _on_piece_landed():
-	setup_new_piece()
-	score_lines()
+	if not is_over:
+		setup_new_piece()
+		score_lines()
 	
 func _on_piece_cannot_move():
-	if current_piece:
-		current_piece.disconnect("piece_landed", _on_piece_landed)
-		current_piece.disconnect("cannot_move", _on_piece_cannot_move)
 	set_game_over(true)
 
 func _on_move_timer_timeout():
@@ -194,10 +194,12 @@ func _on_restart_button_pressed():
 
 func _on_pause_button_toggled(toggled_on):
 	if toggled_on:
+		paused.visible = true
 		pause_button.text = "Resume"
 		main.get_node("FallTimer").stop()
 		main.get_node("MoveTimer").stop()
 	else:
+		paused.visible = false
 		pause_button.text = "Pause"
 		main.get_node("FallTimer").start()
 		main.get_node("MoveTimer").start()
