@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://o1ni24lljj0e"]
+[gd_scene load_steps=10 format=3 uid="uid://o1ni24lljj0e"]
 
 [ext_resource type="Texture2D" uid="uid://d256rcjvfgi4r" path="res://assets/bloc_sheet.png" id="1_r5f6k"]
 [ext_resource type="Script" path="res://scripts/TetremzzzGame.gd" id="2_dkd4q"]
@@ -71,6 +71,13 @@ texture_region_size = Vector2i(64, 64)
 [sub_resource type="TileSet" id="TileSet_wgabh"]
 tile_size = Vector2i(64, 64)
 sources/0 = SubResource("TileSetAtlasSource_v5o43")
+
+[sub_resource type="LabelSettings" id="LabelSettings_sv4c6"]
+font = ExtResource("3_owhsr")
+font_size = 128
+shadow_size = 50
+shadow_color = Color(0, 0, 0, 0.745098)
+shadow_offset = Vector2(0, 30)
 
 [node name="Main" type="Node2D"]
 
@@ -249,6 +256,15 @@ offset_bottom = -130.0
 text = "NEXT"
 label_settings = ExtResource("3_ogoxq")
 horizontal_alignment = 1
+
+[node name="GameOver" type="Label" parent="."]
+visible = false
+offset_left = -64.0
+offset_top = 576.0
+offset_right = 895.0
+offset_bottom = 699.0
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_sv4c6")
 
 [connection signal="timeout" from="MoveTimer" to="Board" method="_on_move_timer_timeout"]
 [connection signal="timeout" from="FallTimer" to="Board" method="_on_fall_timer_timeout"]

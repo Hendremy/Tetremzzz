@@ -1,6 +1,7 @@
 class_name Tetromino extends Node
 
 signal piece_landed
+signal cannot_move
 
 var _id: int
 var _rotations : Array
@@ -38,16 +39,22 @@ func activate(start, piece_layer, board_layer, source_id):
 	_is_active = true
 	erase()
 	draw()
+	
+	if not check_can_move(Vector2i(0,0)) and _position == _board.START_POS:
+		emit_signal("cannot_move")
 
 func move(direction : Vector2i):
 	if check_can_move(direction):
 		erase()
 		_position += direction
 		draw()
-	elif direction == _board.DOWN:
-		erase(_piece_layer)
-		draw(_board_layer)
-		emit_signal("piece_landed")
+	else:
+		if direction == _board.DOWN:
+			erase(_piece_layer)
+			draw(_board_layer)
+			emit_signal("piece_landed")
+		elif _position == _board.START_POS:
+			emit_signal("cannot_move")
 		
 func drop(direction):
 	while check_can_move(direction):

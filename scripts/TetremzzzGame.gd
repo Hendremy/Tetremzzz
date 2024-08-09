@@ -1,6 +1,8 @@
 extends TileMap
 
 @onready var main = $".."
+@onready var game_over = $"../GameOver"
+
 @onready var pause_button = %PauseButton
 @onready var hold = %Hold
 @onready var next = %Next
@@ -19,6 +21,7 @@ const LEFT = Vector2i(-1,0)
 const RIGHT = Vector2i(+1,0)
 const ROWS = 20
 const COLS = 10
+const LEVEL_LINE_NB = 10
 
 var score = 0
 var line_count = 0
@@ -30,6 +33,7 @@ var next_pieces = []
 var next_pieces_buffer = []
 var hold_piece
 var is_paused = false
+var is_over = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -43,12 +47,25 @@ func new_game():
 	next_pieces = tetromino_factory.create_set()
 	next_pieces_buffer = tetromino_factory.create_set()
 	
+	set_game_over(false)
+	
 	update_level()
 	update_score()
 	update_lines()
 
 	setup_new_piece()
 	pause(false)
+	
+func set_game_over(yes:bool):
+	game_over.visible = yes
+	is_over = yes
+	
+func update_scoreboard(new_score, new_line_count):
+	update_score(new_score)
+	update_lines(new_line_count)
+	
+	if line_count > LEVEL_LINE_NB * level:
+		update_level(level + 1)
 	
 func update_level(value = 1):
 	level = value
@@ -74,8 +91,11 @@ func erase_board():
 func setup_new_piece():
 	if current_piece:
 		current_piece.disconnect("piece_landed", _on_piece_landed)
+		current_piece.disconnect("cannot_move", _on_piece_cannot_move)
+		
 	current_piece = pop_next_piece()
 	current_piece.piece_landed.connect(_on_piece_landed)
+	current_piece.cannot_move.connect(_on_piece_cannot_move)
 	current_piece.activate(START_POS, PIECE_LAYER, BOARD_LAYER, SOURCE_ID)
 	
 func pop_next_piece() -> Tetromino:
@@ -95,8 +115,7 @@ func score_lines():
 		clear_line(line)
 		scored_pts += 100
 	
-	line_count += lines.size() 
-	score += scored_pts
+	update_scoreboard(score + scored_pts, line_count + lines.size())
 	
 	for line in lines:
 		shift_upper_rows(line)
@@ -109,8 +128,7 @@ func shift_upper_rows(line):
 			if cell:
 				erase_cell(BOARD_LAYER, pos)
 				set_cell(BOARD_LAYER, Vector2i(col, row + 1), SOURCE_ID, cell)
-			
-	
+
 func clear_line(row):
 	for col in range(1, COLS + 1):
 		erase_cell(BOARD_LAYER, Vector2i(col,row))
@@ -127,6 +145,9 @@ func get_full_lines():
 	return lines
 
 func _process(_delta):
+	if is_over:
+		return
+	
 	if Input.is_action_just_pressed("pause"):
 		pause(!is_paused)
 	
@@ -145,9 +166,15 @@ func _process(_delta):
 func _on_piece_landed():
 	setup_new_piece()
 	score_lines()
+	
+func _on_piece_cannot_move():
+	if current_piece:
+		current_piece.disconnect("piece_landed", _on_piece_landed)
+		current_piece.disconnect("cannot_move", _on_piece_cannot_move)
+	set_game_over(true)
 
 func _on_move_timer_timeout():
-	if is_paused:
+	if is_paused or is_over:
 		return
 	
 	if Input.is_action_pressed("down"):
