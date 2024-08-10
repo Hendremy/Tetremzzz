@@ -14,6 +14,7 @@ var _piece_layer
 var _board_layer
 var _shadow_layer
 var _position
+var _start_pos
 var _shadow_position
 var _is_active = false
 
@@ -32,9 +33,10 @@ func convert_rotations(rotations):
 		converted_rotations.append(converted_r)
 	return converted_rotations
 
-func activate(board, start, piece_layer, board_layer, shadow_layer, source_id):
+func activate(board, start_pos, piece_layer, board_layer, shadow_layer, source_id):
 	_board = board
-	_position = Vector2i(start)
+	_position = Vector2i(start_pos)
+	_start_pos = Vector2i(start_pos)
 	_curr_rotation = 0
 	_shadow_position = Vector2i(_position)
 	_piece_layer = piece_layer
@@ -45,7 +47,7 @@ func activate(board, start, piece_layer, board_layer, shadow_layer, source_id):
 	erase()
 	draw()
 	
-	if not check_can_move(Vector2i(0,0)) and _position == _board.START_POS:
+	if not check_can_move(Vector2i(0,0)) and _position == _start_pos:
 		emit_signal("cannot_move")
 
 func move(direction : Vector2i):
@@ -58,7 +60,7 @@ func move(direction : Vector2i):
 			erase(_piece_layer)
 			draw(_board_layer)
 			emit_signal("piece_landed")
-		elif _position == _board.START_POS:
+		elif _position == _start_pos:
 			emit_signal("cannot_move")
 		
 func drop(direction):

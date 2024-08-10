@@ -10,6 +10,14 @@ const SOURCE_ID = 0
 var current_piece : Tetromino
 var can_swap = true
 
+func _ready():
+	reset()
+
+func reset():
+	current_piece = null
+	can_swap = true
+	_erase_hold()
+
 func swap_piece(piece:Tetromino):
 	if not can_swap:
 		return null

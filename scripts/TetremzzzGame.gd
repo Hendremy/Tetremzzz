@@ -29,11 +29,8 @@ var score = 0
 var line_count = 0
 var level = 1
 
-var tetromino_factory : TetrominoFactory
 var current_piece : Tetromino
-var next_pieces = []
-var next_pieces_buffer = []
-var hold_piece
+
 var is_paused = false
 var is_over = false
 
@@ -45,9 +42,8 @@ func new_game():
 	pause(true)
 	erase_board()
 	
-	tetromino_factory = TetrominoFactory.new()
-	next_pieces = tetromino_factory.create_set()
-	next_pieces_buffer = tetromino_factory.create_set()
+	next.reset()
+	hold.reset()
 	
 	set_game_over(false)
 	
@@ -86,7 +82,8 @@ func pause(yes: bool):
 
 func erase_board():
 	for i in range(0,COLS):
-		for j in range(0,ROWS):
+		for j in range(-1,ROWS):
+			self.erase_cell(SHADOW_LAYER, Vector2i(i,j))
 			self.erase_cell(BOARD_LAYER, Vector2i(i,j))
 			self.erase_cell(PIECE_LAYER, Vector2i(i,j))
 	
@@ -94,7 +91,7 @@ func setup_new_piece():
 	if current_piece:
 		_disconnect_piece_events()
 		
-	current_piece = pop_next_piece()
+	current_piece = next.pop_next_piece()
 	_connect_piece_events()
 	current_piece.activate(self, START_POS, PIECE_LAYER, BOARD_LAYER, SHADOW_LAYER, SOURCE_ID)
 	
@@ -107,15 +104,6 @@ func _disconnect_piece_events():
 	if current_piece:
 		current_piece.disconnect("piece_landed", _on_piece_landed)
 		current_piece.disconnect("cannot_move", _on_piece_cannot_move)
-
-func pop_next_piece() -> Tetromino:
-	var p = next_pieces.pop_front()
-	
-	if next_pieces.size() == 0:
-		next_pieces = next_pieces_buffer
-		next_pieces_buffer = tetromino_factory.create_set()
-		
-	return p
 
 func score_lines():
 	var scored_pts = 0
@@ -226,3 +214,6 @@ func _on_pause_button_toggled(toggled_on):
 		main.get_node("FallTimer").start()
 		main.get_node("MoveTimer").start()
 	is_paused = toggled_on
+
+func _on_exit_button_pressed():
+	get_tree().quit()
