@@ -1,9 +1,10 @@
 # Assets Sources
 
 # Images
-beautiful-mountains-landscape.jpg = https://fr.freepik.com/photos-gratuite/magnifique-paysage-montagneux_133374388.htm#fromView=search&page=2&position=46&uuid=649d7d69-79ed-4da2-b0c2-9d0b4920a520
+background = <a href="https://www.freepik.com/free-ai-image/galaxy-planets-digital-art_268169901.htm#fromView=search&page=1&position=21&uuid=ce4b0388-78ce-4cc1-a955-ebd2f84a380b">Image by freepik</a>
 
 bloc_sheet.png = me + gimp
+
 
 # Fonts
 
