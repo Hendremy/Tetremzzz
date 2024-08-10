@@ -57,15 +57,19 @@ func move(direction : Vector2i):
 		draw()
 	else:
 		if direction == _board.DOWN:
-			erase(_piece_layer)
-			draw(_board_layer)
-			emit_signal("piece_landed")
+			land()
 		elif _position == _start_pos:
 			emit_signal("cannot_move")
 		
 func drop(direction):
 	while check_can_move(direction):
 		move(direction)
+	land()
+	
+func land():
+	erase(_piece_layer)
+	draw(_board_layer)
+	emit_signal("piece_landed")
 
 func check_can_move(direction):
 	var next_pos = calc_absolute_pos(_position + direction)

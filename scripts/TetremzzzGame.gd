@@ -3,6 +3,7 @@ extends TileMap
 @onready var main = $".."
 @onready var game_over = $"../GameOver"
 @onready var paused = $"../Paused"
+@onready var fall_timer = $"../FallTimer"
 
 @onready var pause_button = %PauseButton
 @onready var hold = %Hold
@@ -24,7 +25,20 @@ const RIGHT = Vector2i(+1,0)
 const ROWS = 20
 const COLS = 10
 const LEVEL_LINE_NB = 10
+# based of https://listfist.com/list-of-tetris-levels-by-speed-nes-ntsc-vs-pal
+const SECONDS_TO_BOTTOM_LVL = [
+	15.974,
+	14.31,
+	12.646,
+	10.982,
+	9.318,
+	7.654,
+	4.326,
+	2.662,
+	1.997,
+ ]
 
+var speed = SECONDS_TO_BOTTOM_LVL[0] / ROWS
 var score = 0
 var line_count = 0
 var level = 1
@@ -50,7 +64,8 @@ func new_game():
 	update_level()
 	update_score()
 	update_lines()
-
+	update_speed()
+	
 	setup_new_piece()
 	pause(false)
 	
@@ -64,6 +79,7 @@ func update_scoreboard(new_score, new_line_count):
 	
 	if line_count > LEVEL_LINE_NB * level:
 		update_level(level + 1)
+		update_speed()
 	
 func update_level(value = 1):
 	level = value
@@ -76,6 +92,19 @@ func update_score(value = 0):
 func update_lines(value = 0):
 	line_count = value
 	lines_value.text = str(line_count)
+	
+func update_speed():
+	if 0 < level and level < 10:
+		speed = SECONDS_TO_BOTTOM_LVL[level-1]/ROWS
+	elif level < 13:
+		speed = 1.664/ROWS
+	elif level < 16:
+		speed = 1.331/ROWS
+	elif level < 19:
+		speed = 0.666/ROWS
+	else:
+		speed = 0.333/ROWS
+	fall_timer.wait_time = speed
 	
 func pause(yes: bool):
 	pause_button.emit_signal("toggled", yes)
