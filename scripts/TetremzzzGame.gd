@@ -45,7 +45,7 @@ func new_game():
 	pause(true)
 	erase_board()
 	
-	tetromino_factory = TetrominoFactory.new(self)
+	tetromino_factory = TetrominoFactory.new()
 	next_pieces = tetromino_factory.create_set()
 	next_pieces_buffer = tetromino_factory.create_set()
 	
@@ -92,14 +92,22 @@ func erase_board():
 	
 func setup_new_piece():
 	if current_piece:
-		current_piece.disconnect("piece_landed", _on_piece_landed)
-		current_piece.disconnect("cannot_move", _on_piece_cannot_move)
+		_disconnect_piece_events()
 		
 	current_piece = pop_next_piece()
-	current_piece.piece_landed.connect(_on_piece_landed)
-	current_piece.cannot_move.connect(_on_piece_cannot_move)
-	current_piece.activate(START_POS, PIECE_LAYER, BOARD_LAYER, SHADOW_LAYER, SOURCE_ID)
+	_connect_piece_events()
+	current_piece.activate(self, START_POS, PIECE_LAYER, BOARD_LAYER, SHADOW_LAYER, SOURCE_ID)
 	
+func _connect_piece_events():
+	if current_piece:
+		current_piece.piece_landed.connect(_on_piece_landed)
+		current_piece.cannot_move.connect(_on_piece_cannot_move)
+
+func _disconnect_piece_events():
+	if current_piece:
+		current_piece.disconnect("piece_landed", _on_piece_landed)
+		current_piece.disconnect("cannot_move", _on_piece_cannot_move)
+
 func pop_next_piece() -> Tetromino:
 	var p = next_pieces.pop_front()
 	
@@ -162,13 +170,27 @@ func _process(_delta):
 	if Input.is_action_just_pressed("rotate"):
 		current_piece.rotate()
 		
-	#if Input.is_action_just_pressed("hold"):
-	#	emit_signal('hold_pressed')
+	if Input.is_action_just_pressed("hold"):
+		if hold.can_swap:
+			_disconnect_piece_events()
+			current_piece.erase()
+			
+			var swapped = hold.swap_piece(current_piece)
+			
+			if swapped:
+				current_piece = swapped
+				current_piece.activate(self, START_POS, PIECE_LAYER, BOARD_LAYER, SHADOW_LAYER, SOURCE_ID)
+			else:
+				setup_new_piece()
+				
+			current_piece.draw()
+			_connect_piece_events()
 
 func _on_piece_landed():
 	if not is_over:
 		setup_new_piece()
 		score_lines()
+		hold.enable_swap()
 	
 func _on_piece_cannot_move():
 	set_game_over(true)

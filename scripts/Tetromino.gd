@@ -17,9 +17,8 @@ var _position
 var _shadow_position
 var _is_active = false
 
-func _init(id: int, board : TileMap, rotations : Array):
+func _init(id: int,rotations : Array):
 	_id = id
-	_board = board
 	_rotations = convert_rotations(rotations)
 	_curr_rotation = 0
 	_tile_coord = Vector2i(id, 0)
@@ -33,8 +32,10 @@ func convert_rotations(rotations):
 		converted_rotations.append(converted_r)
 	return converted_rotations
 
-func activate(start, piece_layer, board_layer, shadow_layer, source_id):
+func activate(board, start, piece_layer, board_layer, shadow_layer, source_id):
+	_board = board
 	_position = Vector2i(start)
+	_curr_rotation = 0
 	_shadow_position = Vector2i(_position)
 	_piece_layer = piece_layer
 	_board_layer = board_layer
