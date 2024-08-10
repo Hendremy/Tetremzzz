@@ -25,6 +25,13 @@ const RIGHT = Vector2i(+1,0)
 const ROWS = 20
 const COLS = 10
 const LEVEL_LINE_NB = 10
+const SCORE_PER_LINES = {
+	0:0,
+	1:100,
+	2:300,
+	3:500,
+	4:800
+}
 # based of https://listfist.com/list-of-tetris-levels-by-speed-nes-ntsc-vs-pal
 const SECONDS_TO_BOTTOM_LVL = [
 	15.974,
@@ -140,7 +147,8 @@ func score_lines():
 	
 	for line in lines:
 		clear_line(line)
-		scored_pts += 100 * level
+	
+	scored_pts += SCORE_PER_LINES[lines.size()] * level
 	
 	update_scoreboard(score + scored_pts, line_count + lines.size())
 	
@@ -186,6 +194,9 @@ func _process(_delta):
 		
 	if Input.is_action_just_pressed("rotate"):
 		current_piece.rotate()
+		
+	if Input.is_action_just_pressed("rotate_counter_clockwise"):
+		current_piece.rotate(false)
 		
 	if Input.is_action_just_pressed("hold"):
 		if hold.can_swap:

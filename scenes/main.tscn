@@ -1,11 +1,16 @@
-[gd_scene load_steps=12 format=3 uid="uid://o1ni24lljj0e"]
+[gd_scene load_steps=17 format=3 uid="uid://o1ni24lljj0e"]
 
 [ext_resource type="Texture2D" uid="uid://d256rcjvfgi4r" path="res://assets/bloc_sheet.png" id="1_r5f6k"]
+[ext_resource type="Texture2D" uid="uid://kiytkiynfh5r" path="res://assets/background-space.png" id="1_xvt35"]
 [ext_resource type="Script" path="res://scripts/TetremzzzGame.gd" id="2_dkd4q"]
 [ext_resource type="LabelSettings" uid="uid://4who20qup4y3" path="res://assets/ui_label_settings.tres" id="3_ogoxq"]
 [ext_resource type="FontFile" uid="uid://lyxkbj4otydv" path="res://assets/space age.otf" id="3_owhsr"]
 [ext_resource type="Script" path="res://scenes/Hold.gd" id="5_awiuk"]
 [ext_resource type="Script" path="res://scenes/Next.gd" id="6_7m1kj"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pdu7h"]
+font = ExtResource("3_owhsr")
+font_size = 96
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_u4ak1"]
 texture = ExtResource("1_r5f6k")
@@ -74,6 +79,35 @@ tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_u4ak1")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_oitwi"]
+texture = ExtResource("1_r5f6k")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_onfvq"]
+tile_size = Vector2i(64, 64)
+sources/0 = SubResource("TileSetAtlasSource_oitwi")
+
+[sub_resource type="LabelSettings" id="LabelSettings_hic7d"]
+line_spacing = 8.0
+font = ExtResource("3_owhsr")
+font_size = 28
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_v5o43"]
 texture = ExtResource("1_r5f6k")
 texture_region_size = Vector2i(64, 64)
@@ -101,31 +135,86 @@ shadow_offset = Vector2(0, 30)
 
 [node name="Main" type="Node2D"]
 
+[node name="Background" type="TextureRect" parent="."]
+offset_left = -1272.0
+offset_top = -552.0
+offset_right = 1808.0
+offset_bottom = 1768.0
+texture = ExtResource("1_xvt35")
+
+[node name="BackgroundDim" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.003
+anchor_right = 0.992
+anchor_bottom = 0.99
+offset_left = 17.24
+offset_top = -8.0
+offset_right = 48.6399
+offset_bottom = 7.19995
+color = Color(0, 0, 0, 0.32549)
+
+[node name="HoldDim" type="ColorRect" parent="."]
+offset_left = -616.0
+offset_top = 24.0
+offset_right = -152.0
+offset_bottom = 360.0
+color = Color(0, 0, 0, 0.666667)
+
+[node name="ScoreBoardDim" type="ColorRect" parent="."]
+offset_left = -608.0
+offset_top = 488.0
+offset_right = -160.0
+offset_bottom = 1304.0
+color = Color(0, 0, 0, 0.666667)
+
+[node name="NextDim" type="ColorRect" parent="."]
+offset_left = 800.0
+offset_top = 32.0
+offset_right = 1248.0
+offset_bottom = 734.0
+color = Color(0, 0, 0, 0.666667)
+
+[node name="BoardDim" type="ColorRect" parent="."]
+offset_left = -48.0
+offset_top = -144.0
+offset_right = 688.0
+offset_bottom = 1320.0
+color = Color(0, 0, 0, 0.666667)
+
+[node name="Tetremz" type="Label" parent="."]
+offset_left = -80.0
+offset_top = -112.0
+offset_right = 717.0
+offset_bottom = 11.0
+text = "TETREMZ"
+label_settings = SubResource("LabelSettings_pdu7h")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Line2D" type="Line2D" parent="."]
+position = Vector2(624, 672)
+points = PackedVector2Array(32, -672, -648, -672)
+width = 2.0
+default_color = Color(1, 0.121569, 0.180392, 0.615686)
+
 [node name="Board" type="TileMap" parent="."]
 position = Vector2(1, 0)
 tile_set = SubResource("TileSet_5yhxe")
 rendering_quadrant_size = 64
 format = 2
 layer_0/name = "Board"
-layer_0/tile_data = PackedInt32Array(1310720, 0, 0, 1310721, 0, 0, 1310722, 0, 0, 1310723, 0, 0, 1310724, 0, 0, 1310725, 0, 0, 1310726, 0, 0, 1310727, 0, 0, 1310728, 0, 0, 1310729, 0, 0, 1310730, 0, 0, 65535, 0, 0, 131071, 0, 0, 196607, 0, 0, 262143, 0, 0, 327679, 0, 0, 393215, 0, 0, 458751, 0, 0, 524287, 0, 0, 589823, 0, 0, 655359, 0, 0, 720895, 0, 0, 786431, 0, 0, 851967, 0, 0, 917503, 0, 0, 983039, 0, 0, 1048575, 0, 0, 1114111, 0, 0, 1179647, 0, 0, 1245183, 0, 0, 1310719, 0, 0, 1376255, 0, 0, 10, 0, 0, 65546, 0, 0, 131082, 0, 0, 196618, 0, 0, 262154, 0, 0, 327690, 0, 0, 393226, 0, 0, 458762, 0, 0, 524298, 0, 0, 589834, 0, 0, 655370, 0, 0, 720906, 0, 0, 786442, 0, 0, 851978, 0, 0, 917514, 0, 0, 983050, 0, 0, 1048586, 0, 0, 1114122, 0, 0, 1179658, 0, 0, 1245194, 0, 0)
+layer_0/tile_data = PackedInt32Array(1310720, 0, 0, 1310721, 0, 0, 1310722, 0, 0, 1310723, 0, 0, 1310724, 0, 0, 1310725, 0, 0, 1310726, 0, 0, 1310727, 0, 0, 1310728, 0, 0, 1310729, 0, 0, 1310730, 0, 0, 65535, 0, 0, 131071, 0, 0, 196607, 0, 0, 262143, 0, 0, 327679, 0, 0, 393215, 0, 0, 458751, 0, 0, 524287, 0, 0, 589823, 0, 0, 655359, 0, 0, 720895, 0, 0, 786431, 0, 0, 851967, 0, 0, 917503, 0, 0, 983039, 0, 0, 1048575, 0, 0, 1114111, 0, 0, 1179647, 0, 0, 1245183, 0, 0, 1310719, 0, 0, 1376255, 0, 0, 10, 0, 0, 65546, 0, 0, 131082, 0, 0, 196618, 0, 0, 262154, 0, 0, 327690, 0, 0, 393226, 0, 0, 458762, 0, 0, 524298, 0, 0, 589834, 0, 0, 655370, 0, 0, 720906, 0, 0, 786442, 0, 0, 851978, 0, 0, 917514, 0, 0, 983050, 0, 0, 1048586, 0, 0, 1114122, 0, 0, 1179658, 0, 0, 1245194, 0, 0, -65537, 0, 0, -1, 0, 0, -131062, 0, 0, -65526, 0, 0, -131073, 0, 0, -196598, 0, 0, -196608, 0, 0, -196607, 0, 0, -196606, 0, 0, -196605, 0, 0, -196604, 0, 0, -196603, 0, 0, -196602, 0, 0, -196601, 0, 0, -196600, 0, 0, -196599, 0, 0)
 layer_1/name = "FallingPiece"
+layer_1/z_index = 10
 layer_1/tile_data = PackedInt32Array()
 layer_2/name = "Shadow"
+layer_2/z_index = 5
 layer_2/tile_data = PackedInt32Array()
 script = ExtResource("2_dkd4q")
 
-[node name="Tetremz" type="Label" parent="Board"]
-offset_left = 151.0
-offset_top = -64.0
-offset_right = 485.0
-offset_bottom = -2.0
-text = "TETREMZ"
-label_settings = ExtResource("3_ogoxq")
-horizontal_alignment = 1
-metadata/_edit_use_anchors_ = true
-
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(320, 707)
+position = Vector2(320, 568)
 zoom = Vector2(0.5, 0.5)
 
 [node name="MoveTimer" type="Timer" parent="."]
@@ -136,15 +225,20 @@ autostart = true
 wait_time = 0.5
 autostart = true
 
+[node name="ScoreBoardBorder" type="TileMap" parent="."]
+position = Vector2(-640, 448)
+tile_set = SubResource("TileSet_onfvq")
+format = 2
+layer_0/tile_data = PackedInt32Array(0, 0, 0, 65536, 0, 0, 131072, 0, 0, 196608, 0, 0, 262144, 0, 0, 327680, 0, 0, 393216, 0, 0, 458752, 0, 0, 524288, 0, 0, 589824, 0, 0, 655360, 0, 0, 720896, 0, 0, 786432, 0, 0, 851968, 0, 0, 1, 0, 0, 851969, 0, 0, 2, 0, 0, 851970, 0, 0, 3, 0, 0, 851971, 0, 0, 4, 0, 0, 851972, 0, 0, 5, 0, 0, 851973, 0, 0, 6, 0, 0, 851974, 0, 0, 7, 0, 0, 65543, 0, 0, 131079, 0, 0, 196615, 0, 0, 262151, 0, 0, 327687, 0, 0, 393223, 0, 0, 458759, 0, 0, 524295, 0, 0, 589831, 0, 0, 655367, 0, 0, 720903, 0, 0, 786439, 0, 0, 851975, 0, 0)
+
 [node name="ScoreBoard" type="VBoxContainer" parent="."]
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 0.996
-offset_left = -640.0
-offset_top = 448.0
-offset_right = -128.0
-offset_bottom = 1344.0
-alignment = 1
+offset_left = -576.0
+offset_top = 512.0
+offset_right = -192.0
+offset_bottom = 1280.0
 
 [node name="ScoreContainer" type="MarginContainer" parent="ScoreBoard"]
 layout_mode = 2
@@ -221,6 +315,31 @@ text = "1
 "
 label_settings = ExtResource("3_ogoxq")
 horizontal_alignment = 1
+
+[node name="ControlsContainer" type="MarginContainer" parent="."]
+offset_left = -576.0
+offset_top = 1008.0
+offset_right = -182.0
+offset_bottom = 1284.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="ControlsBox" type="VBoxContainer" parent="ControlsContainer"]
+layout_mode = 2
+
+[node name="Controls" type="Label" parent="ControlsContainer/ControlsBox"]
+layout_mode = 2
+text = "up : Rotate right
+X : rotate left
+C : hold
+P : pause
+Space : drop
+<- -> : move
+down : go down
+"
+label_settings = SubResource("LabelSettings_hic7d")
 
 [node name="Buttons" type="VBoxContainer" parent="."]
 anchors_preset = -1
@@ -322,9 +441,9 @@ horizontal_alignment = 1
 
 [node name="GameOver" type="Label" parent="."]
 offset_left = -104.0
-offset_top = 584.0
+offset_top = 520.0
 offset_right = 855.0
-offset_bottom = 707.0
+offset_bottom = 643.0
 text = "GAME OVER"
 label_settings = SubResource("LabelSettings_sv4c6")
 
