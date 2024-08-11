@@ -118,7 +118,8 @@ func pause(yes: bool):
 
 func erase_board():
 	for i in range(0,COLS):
-		for j in range(-1,ROWS):
+		self.erase_cell(SHADOW_LAYER, Vector2i(i,-1))
+		for j in range(0,ROWS):
 			self.erase_cell(SHADOW_LAYER, Vector2i(i,j))
 			self.erase_cell(BOARD_LAYER, Vector2i(i,j))
 			self.erase_cell(PIECE_LAYER, Vector2i(i,j))
